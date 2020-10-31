@@ -6,8 +6,8 @@ Helper functions for filename and URL generation.
 import sys
 import os
 import subprocess
-import urllib.request
-import urllib.error
+import requests
+
 import zipfile
 import xml.etree.ElementTree as elemTree
 import logging
@@ -19,14 +19,14 @@ from io import BytesIO
 __author__ = 'Yeongbin Jo <iam.yeongbin.jo@gmail.com>'
 
 
-def get_chromedriver_filename():
+def get_edgedriver_filename():
     """
     Returns the filename of the binary for the current platform.
     :return: Binary filename
     """
     if sys.platform.startswith('win'):
-        return 'chromedriver.exe'
-    return 'chromedriver'
+        return 'msedgedriver.exe'
+    return 'msedgedriver'
 
 
 def get_variable_separator():
@@ -50,20 +50,20 @@ def get_platform_architecture():
         platform = 'win'
         architecture = '32'
     else:
-        raise RuntimeError('Could not determine chromedriver download URL for this platform.')
+        raise RuntimeError('Could not determine edgedriver download URL for this platform.')
     return platform, architecture
 
 
-def get_chromedriver_url(version):
+def get_edgedriver_url(version):
     """
     Generates the download URL for current platform , architecture and the given version.
     Supports Linux, MacOS and Windows.
-    :param version: chromedriver version string
-    :return: Download URL for chromedriver
+    :param version: edgedriver version string
+    :return: Download URL for edgedriver
     """
-    base_url = 'https://chromedriver.storage.googleapis.com/'
+    base_url = 'https://msedgedriver.azureedge.net//'
     platform, architecture = get_platform_architecture()
-    return base_url + version + '/chromedriver_' + platform + architecture + '.zip'
+    return base_url + version + '/edgedriver_' + platform + architecture + '.zip'
 
 
 def find_binary_in_path(filename):
@@ -93,21 +93,20 @@ def check_version(binary, required_version):
     return False
 
 
-def get_chrome_version():
+def get_edge_version():
     """
-    :return: the version of chrome installed on client
+    :return: the version of edge installed on client
     """
     platform, _ = get_platform_architecture()
     if platform == 'linux':
-        with subprocess.Popen(['chromium-browser', '--version'], stdout=subprocess.PIPE) as proc:
-            version = proc.stdout.read().decode('utf-8').replace('Chromium', '').strip()
-            version = version.replace('Google Chrome', '').strip()
+        return  # Edge for linux still doesn't exists
     elif platform == 'mac':
-        process = subprocess.Popen(['/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', '--version'], stdout=subprocess.PIPE)
-        version = process.communicate()[0].decode('UTF-8').replace('Google Chrome', '').strip()
+        # TODO: FIX THIS
+        process = subprocess.Popen(['/Applications/Google edge.app/Contents/MacOS/Google edge', '--version'], stdout=subprocess.PIPE)
+        version = process.communicate()[0].decode('UTF-8').replace('Google edge', '').strip()
     elif platform == 'win':
         process = subprocess.Popen(
-            ['reg', 'query', 'HKEY_CURRENT_USER\\Software\\Google\\Chrome\\BLBeacon', '/v', 'version'],
+            ['reg', 'query', 'HKEY_CURRENT_USER\\Software\\Microsoft\\Edge\\BLBeacon', '/v', 'version'],
             stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL
         )
         version = process.communicate()[0].decode('UTF-8').strip().split()[-1]
@@ -118,91 +117,91 @@ def get_chrome_version():
 
 def get_major_version(version):
     """
-    :param version: the version of chrome
-    :return: the major version of chrome
+    :param version: the version of edge
+    :return: the major version of edge
     """
     return version.split('.')[0]
 
 
-def get_matched_chromedriver_version(version):
+def get_matched_edgedriver_version(version):
     """
-    :param version: the version of chrome
-    :return: the version of chromedriver
+    :param version: the version of edge
+    :return: the version of edgedriver
     """
-    doc = urllib.request.urlopen('https://chromedriver.storage.googleapis.com').read()
+    doc = requests.get('https://msedgedriver.azureedge.net/').text
     root = elemTree.fromstring(doc)
-    for k in root.iter('{http://doc.s3.amazonaws.com/2006-03-01}Key'):
+    for k in root.iter('Name'):
         if k.text.find(get_major_version(version) + '.') == 0:
             return k.text.split('/')[0]
     return
 
 
-def get_chromedriver_path():
+def get_edgedriver_path():
     """
-    :return: path of the chromedriver binary
+    :return: path of the edgedriver binary
     """
     return os.path.abspath(os.path.dirname(__file__))
 
 
-def print_chromedriver_path():
+def print_edgedriver_path():
     """
-    Print the path of the chromedriver binary.
+    Print the path of the edgedriver binary.
     """
-    print(get_chromedriver_path())
+    print(get_edgedriver_path())
 
 
-def download_chromedriver(cwd=False):
+def download_edgedriver(cwd=False):
     """
-    Downloads, unzips and installs chromedriver.
-    If a chromedriver binary is found in PATH it will be copied, otherwise downloaded.
+    Downloads, unzips and installs edgedriver.
+    If a edgedriver binary is found in PATH it will be copied, otherwise downloaded.
 
     :param cwd: Flag indicating whether to download to current working directory
-    :return: The file path of chromedriver
+    :return: The file path of edgedriver
     """
-    chrome_version = get_chrome_version()
-    if not chrome_version:
-        logging.debug('Chrome is not installed.')
+    edge_version = get_edge_version()
+    if not edge_version:
+        logging.debug('edge is not installed.')
         return
-    chromedriver_version = get_matched_chromedriver_version(chrome_version)
-    if not chromedriver_version:
-        logging.debug('Can not find chromedriver for currently installed chrome version.')
+    edgedriver_version = get_matched_edgedriver_version(edge_version)
+    if not edgedriver_version:
+        logging.debug('Can not find edgedriver for currently installed edge version.')
         return
-    major_version = get_major_version(chromedriver_version)
+    major_version = get_major_version(edgedriver_version)
 
     if cwd:
-        chromedriver_dir = os.path.join(
+        edgedriver_dir = os.path.join(
             os.path.abspath(os.getcwd()),
             major_version
         )
     else:
-        chromedriver_dir = os.path.join(
+        edgedriver_dir = os.path.join(
             os.path.abspath(os.path.dirname(__file__)),
             major_version
         )
-    chromedriver_filename = get_chromedriver_filename()
-    chromedriver_filepath = os.path.join(chromedriver_dir, chromedriver_filename)
-    if not os.path.isfile(chromedriver_filepath) or \
-            not check_version(chromedriver_filepath, chromedriver_version):
-        logging.debug(f'Downloading chromedriver ({chromedriver_version})...')
-        if not os.path.isdir(chromedriver_dir):
-            os.makedirs(chromedriver_dir)
-        url = get_chromedriver_url(version=chromedriver_version)
+    edgedriver_filename = get_edgedriver_filename()
+    edgedriver_filepath = os.path.join(edgedriver_dir, edgedriver_filename)
+    if not os.path.isfile(edgedriver_filepath) or \
+            not check_version(edgedriver_filepath, edgedriver_version):
+        logging.debug(f'Downloading edgedriver ({edgedriver_version})...')
+        if not os.path.isdir(edgedriver_dir):
+            os.makedirs(edgedriver_dir)
+        url = get_edgedriver_url(version=edgedriver_version)
         try:
-            response = urllib.request.urlopen(url)
-            if response.getcode() != 200:
-                raise urllib.error.URLError('Not Found')
-        except urllib.error.URLError:
-            raise RuntimeError(f'Failed to download chromedriver archive: {url}')
-        archive = BytesIO(response.read())
+            response = requests.get(url)
+            if response.status_code != 200:
+                raise Exception('URL Not Found')
+        except Exception:
+            raise RuntimeError(f'Failed to download edgedriver archive: {url}')
+        archive = BytesIO(response.content)
         with zipfile.ZipFile(archive) as zip_file:
-            zip_file.extract(chromedriver_filename, chromedriver_dir)
+            zip_file.extract(edgedriver_filename, edgedriver_dir)
     else:
-        logging.debug('Chromedriver is already installed.')
-    if not os.access(chromedriver_filepath, os.X_OK):
-        os.chmod(chromedriver_filepath, 0o744)
-    return chromedriver_filepath
+        logging.debug('edgedriver is already installed.')
+    if not os.access(edgedriver_filepath, os.X_OK):
+        os.chmod(edgedriver_filepath, 0o744)
+    return edgedriver_filepath
 
 
 if __name__ == '__main__':
-    print(get_chrome_version())
-    print(download_chromedriver())
+    print(get_edge_version())
+    print(download_edgedriver())

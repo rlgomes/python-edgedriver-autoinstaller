@@ -1,26 +1,26 @@
-# chromedriver-autoinstaller
-Automatically download and install [chromedriver](https://chromedriver.chromium.org/) that supports the currently installed version of chrome. This installer supports Linux, MacOS and Windows operating systems.
+# edgedriver-autoinstaller
+Automatically download and install [edgedriver](https://edgedriver.chromium.org/) that supports the currently installed version of edge. This installer supports Linux, MacOS and Windows operating systems.
 
 ## Installation
 
 ```bash
-pip install chromedriver-autoinstaller
+pip install edgedriver-autoinstaller
 ```
 
 ## Usage
-Just type `import chromedriver_autoinstaller` in the module you want to use chromedriver.
+Just type `import edgedriver_autoinstaller` in the module you want to use edgedriver.
 
 ## Example
 ```
 from selenium import webdriver
-import chromedriver_autoinstaller
+import edgedriver_autoinstaller
 
 
-chromedriver_autoinstaller.install()  # Check if the current version of chromedriver exists
+edgedriver_autoinstaller.install()  # Check if the current version of edgedriver exists
                                       # and if it doesn't exist, download it automatically,
-                                      # then add chromedriver to path
+                                      # then add edgedriver to path
 
-driver = webdriver.Chrome()
+driver = webdriver.Edge(executable_path="msedgedriver.exe")
 driver.get("http://www.python.org")
 assert "Python" in driver.title
 ```

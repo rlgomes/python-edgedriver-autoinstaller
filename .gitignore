@@ -3,7 +3,7 @@ __pycache__/
 build/
 dist/
 *.egg-info*
-chromedriver_autoinstaller/*/chromedriver*
+chromedriver_autoinstaller/*/edgedriver*
 *.pyc
 .*
 LICENSE.txt
@@ -13,3 +13,7 @@ README.txt
 !.gitlab-ci.yml
 Pipfile
 Pipfile.lock
+
+venv
+.idea
+.vscode

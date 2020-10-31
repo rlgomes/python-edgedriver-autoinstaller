@@ -7,27 +7,27 @@ from . import utils
 
 def install(cwd=False):
     """
-    Appends the directory of the chromedriver binary file to PATH.
+    Appends the directory of the edgedriver binary file to PATH.
 
     :param cwd: Flag indicating whether to download to current working directory
-    :return: The file path of chromedriver
+    :return: The file path of edgedriver
     """
-    chromedriver_filepath = utils.download_chromedriver(cwd)
-    if not chromedriver_filepath:
-        logging.debug('Can not download chromedriver.')
+    edgedriver_filepath = utils.download_edgedriver(cwd)
+    if not edgedriver_filepath:
+        logging.debug('Can not download edgedriver.')
         return
-    chromedriver_dir = os.path.dirname(chromedriver_filepath)
+    edgedriver_dir = os.path.dirname(edgedriver_filepath)
     if 'PATH' not in os.environ:
-        os.environ['PATH'] = chromedriver_dir
-    elif chromedriver_dir not in os.environ['PATH']:
-        os.environ['PATH'] = chromedriver_dir + utils.get_variable_separator() + os.environ['PATH']
-    return chromedriver_filepath
+        os.environ['PATH'] = edgedriver_dir
+    elif edgedriver_dir not in os.environ['PATH']:
+        os.environ['PATH'] = edgedriver_dir + utils.get_variable_separator() + os.environ['PATH']
+    return edgedriver_filepath
 
 
-def get_chrome_version():
+def get_edge_version():
     """
-    Get installed version of chrome on client
+    Get installed version of edge on client
 
-    :return: The version of chrome
+    :return: The version of edge
     """
-    return utils.get_chrome_version()
+    return utils.get_edge_version()

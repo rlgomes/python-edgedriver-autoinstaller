@@ -23,22 +23,22 @@ elif sys.argv[-1] == 'clean':
         shutil.rmtree('build')
     if os.path.isdir('dist'):
         shutil.rmtree('dist')
-    if os.path.isdir('chromedriver_autoinstaller.egg-info'):
-        shutil.rmtree('chromedriver_autoinstaller.egg-info')
+    if os.path.isdir('edgedriver_autoinstaller.egg-info'):
+        shutil.rmtree('edgedriver_autoinstaller.egg-info')
 
 
 setup(
-    name="chromedriver-autoinstaller",
+    name="edgedriver-autoinstaller",
     version="0.2.1",
     author="Yeongbin Jo",
     author_email="iam.yeongbin.jo@gmail.com",
-    description="Automatically install chromedriver that supports the currently installed version of chrome.",
+    description="Automatically install edgedriver that supports the currently installed version of edge.",
     license="MIT",
-    keywords="chromedriver chrome selenium splinter",
-    url="https://github.com/yeongbin-jo/python-chromedriver-autoinstaller",
+    keywords="edgedriver edge selenium splinter",
+    url="https://github.com/fc-dev/python-edgedriver-autoinstaller",
     packages=['chromedriver_autoinstaller'],
     entry_points={
-        'console_scripts': ['chromedriver-path=chromedriver_autoinstaller.utils:print_chromedriver_path'],
+        'console_scripts': ['edgedriver-path=chromedriver_autoinstaller.utils:print_edgedriver_path'],
     },
     long_description_content_type='text/markdown',
     long_description=long_description,
