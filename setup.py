@@ -36,9 +36,9 @@ setup(
     license="MIT",
     keywords="edgedriver edge selenium splinter",
     url="https://github.com/fc-dev/python-edgedriver-autoinstaller",
-    packages=['chromedriver_autoinstaller'],
+    packages=['edgedriver_autoinstaller'],
     entry_points={
-        'console_scripts': ['edgedriver-path=chromedriver_autoinstaller.utils:print_edgedriver_path'],
+        'console_scripts': ['edgedriver-path=edgedriver_autoinstaller.utils:print_edgedriver_path'],
     },
     long_description_content_type='text/markdown',
     long_description=long_description,

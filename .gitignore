@@ -3,7 +3,7 @@ __pycache__/
 build/
 dist/
 *.egg-info*
-chromedriver_autoinstaller/*/edgedriver*
+edgedriver_autoinstaller/*/edgedriver*
 *.pyc
 .*
 LICENSE.txt
