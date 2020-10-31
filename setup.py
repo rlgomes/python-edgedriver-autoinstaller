@@ -30,8 +30,8 @@ elif sys.argv[-1] == 'clean':
 setup(
     name="edgedriver-autoinstaller",
     version="0.2.1",
-    author="Yeongbin Jo",
-    author_email="iam.yeongbin.jo@gmail.com",
+    author="Federico Capece",
+    author_email="capece.1744999@studenti.uniroma1.it",
     description="Automatically install edgedriver that supports the currently installed version of edge.",
     license="MIT",
     keywords="edgedriver edge selenium splinter",
@@ -58,4 +58,5 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
+    install_requires=["requests"],
 )

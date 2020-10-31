@@ -24,3 +24,9 @@ driver = webdriver.Edge(executable_path="msedgedriver.exe")
 driver.get("http://www.python.org")
 assert "Python" in driver.title
 ```
+
+## Note
+
+Forked from: [python-chromedriver-autoinstaller](https://github.com/yeongbin-jo/python-chromedriver-autoinstaller)
+
+Most of the work has been done by [yeongbin-jo](https://github.com/yeongbin-jo/), i only adapted it for Edge.
